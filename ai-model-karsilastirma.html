@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Model Map</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2330;--muted:#5b6475;--line:#e3e6ec;--accent:#2f5bea;--good:#1f8a4c;--bad:#c0392b;--code:#f1f3f6;
+--claude:#d97757;--chatgpt:#10a37f;--gemini:#4285f4;--deepseek:#4d6bfe;--perplexity:#20808d}
+@media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b1f27;--ink:#e7eaf0;--muted:#9aa3b2;--line:#2c323d;--code:#232833;--accent:#7d9bff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:40px 16px 24px;max-width:1150px;margin:auto}
+header h1{margin:0 0 6px;font-size:30px}
+header p{margin:0;color:var(--muted);max-width:760px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .in{max-width:1150px;margin:auto;padding:8px 16px;display:flex;gap:6px;overflow-x:auto}
+nav a{white-space:nowrap;padding:6px 12px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+nav a:hover{background:var(--line)}
+main{max-width:1150px;margin:auto;padding:0 16px 60px}
+section{margin-top:44px}
+h2{font-size:24px;margin:0 0 4px}
+.prompt{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);padding:12px 16px;border-radius:8px;color:var(--muted);font-style:italic;margin:10px 0 18px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+.tabs button.on{color:#fff;border-color:transparent}
+.panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.panel.on{display:block}
+.panel h3{margin:18px 0 6px;font-size:17px}.panel h3:first-child{margin-top:0}
+.panel h4{margin:14px 0 4px;font-size:15px}
+.verdict{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-size:12.5px;padding:3px 10px;border-radius:999px;background:var(--code);color:var(--muted)}
+.chip.g{background:rgba(31,138,76,.13);color:var(--good)}.chip.b{background:rgba(192,57,43,.12);color:var(--bad)}
+pre{background:var(--code);padding:14px;border-radius:8px;overflow:auto;font-size:12.5px;line-height:1.5;max-height:520px}
+details{margin-top:12px}summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.diagram{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:auto;padding:10px;text-align:center}
+.diagram svg{max-width:100%;height:auto}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.score{font-weight:700;text-align:center}
+.s5{color:var(--good)}.s4{color:#3b9a5e}.s3{color:#b8860b}.s2{color:#d26a1f}.s1{color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;border-top:5px solid}
+.mcard h3{margin:0 0 8px}
+.mcard ul{margin:4px 0 10px;padding-left:20px}
+.lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.lbl.g{color:var(--good)}.lbl.b{color:var(--bad)}
+.pref td:first-child{font-weight:600}
+.pill{display:inline-block;color:#fff;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:600;margin:1px 3px 1px 0}
+.wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<header>
+<h1>AI Model Map</h1>
+<p>Claude, ChatGPT, Gemini, DeepSeek ve Perplexity aynı üç prompt ile test edildi: araştırma belgesi, draw.io akış şeması ve Python veri analizi. Önce her prompt için modellerin çıktıları, ardından güçlü/zayıf yönler ve hangi işin hangi modele verileceği.</p>
+</header>
+<nav><div class="in">
+<a href="#p1">Prompt 1 · Araştırma</a><a href="#p2">Prompt 2 · draw.io</a><a href="#p3">Prompt 3 · Python</a><a href="#score">Puan tablosu</a><a href="#sw">Güçlü / Zayıf</a><a href="#pref">Tercihler</a>
+</div></nav>
+<main>
+
+<!-- ================= PROMPT 1 ================= -->
+<section id="p1">
+<h2>Prompt 1 · Uzaktan çalışma araştırması</h2>
+<div class="prompt">Uzaktan çalışmanın çalışan verimliliği üzerindeki etkisine dair bir araştırma yap. Bulgularını 1 sayfayı geçmeyecek bir belge olarak hazırla ve belgenin başına bir yönetici özeti ekle.</div>
+<div class="tabs" data-group="p1"></div>
+
+<div class="panel" data-group="p1" data-model="Claude">
+<div class="verdict"><span class="chip g">1 sayfa sınırına uyuyor</span><span class="chip g">Somut çalışmalar (RCT, Nature)</span><span class="chip b">Kaynakça/link yok</span></div>
+<h3>Yönetici Özeti</h3>
+<p>Araştırmalara göre uzaktan çalışmanın verimliliğe etkisi çalışma modeline, işin türüne ve ölçüm yöntemine bağlı. <b>Hibrit model</b> (haftada 2–3 gün ofis) verimliliği düşürmüyor, çalışanın işten ayrılma oranını belirgin şekilde azaltıyor. <b>Tam uzaktan model</b> ise rutin ve bireysel işlerde verimliliği artırabiliyor. Buna karşılık iş birliği, mentorluk ve öğrenme gerektiren işlerde verim kaybına yol açabiliyor. Kurumlar için en güçlü kanıt, hibrit modelin yapılandırılmış biçimde uygulanmasını destekliyor.</p>
+<h3>Temel Bulgular</h3>
+<ol>
+<li><b>Rutin işlerde artış:</b> Bloom ve arkadaşlarının Ctrip çağrı merkezinde yaptığı rastgele kontrollü deneyde (2015), evden çalışanların performansı yaklaşık %13 arttı. Bu artışın kaynağı daha fazla çalışılan dakika ve daha az moladı.</li>
+<li><b>Hibritte nötr verim, düşük ayrılma:</b> Bloom ve arkadaşlarının Trip.com’da yaptığı RCT (Nature, 2024), haftada 2 gün evden çalışmanın performans ve terfiyi etkilemediğini gösterdi. Aynı çalışmada işten ayrılma yaklaşık üçte bir azaldı.</li>
+<li><b>Tam uzaktanda düşüş riski:</b> Bazı çalışmalar tam uzaktan modelde verim düşüşü buldu:
+<ul><li>Gibbs ve arkadaşlarının Hindistan’daki bir BT firmasında yaptığı çalışmada (2023) verim %8–19 düştü. Düşüşün nedeni koordinasyon maliyetleriydi.</li>
+<li>Emanuel ve Harrington’ın çağrı merkezi çalışmasında (2024) da tam uzaktan çalışanların verimi düşük çıktı.</li></ul></li>
+<li><b>İş birliği ağları daralıyor:</b> Microsoft’ta yapılan çalışma (Yang ve ark., Nature Human Behaviour, 2022), uzaktan çalışmanın ekipler arası iletişimi azalttığını ve senkron iletişimi düşürdüğünü gösterdi. Bunun inovasyonu olumsuz etkileyebileceği belirtildi.</li>
+<li><b>Genç/yeni çalışanlar dezavantajlı:</b> Yeni çalışanlar uzaktan çalışmada daha az geri bildirim ve mentorluk alıyor. Bu durum uzun vadeli verimi düşürebiliyor.</li>
+<li><b>Ölçüm farkı:</b> Çalışanların kendi beyanına dayalı ölçümler genellikle verim artışı gösteriyor. Nesnel çıktı ölçümleri ise daha karışık sonuçlar veriyor.</li>
+</ol>
+<h3>Öneriler</h3>
+<ul><li>Hibrit modelde ofis günleri ekip bazında ortak belirlenmeli. Ofis günleri iş birliği ve mentorluk faaliyetlerine ayrılmalı.</li>
+<li>Performans, ofiste geçirilen süreye göre değil çıktıya göre ölçülmeli.</li>
+<li>Yeni çalışanlar için ilk 6 ay ofis ağırlıklı bir uyum programı uygulanmalı.</li></ul>
+</div>
+
+<div class="panel" data-group="p1" data-model="ChatGPT">
+<div class="verdict"><span class="chip g">Kaynakça + DOI linkleri</span><span class="chip g">Güncel meta-analiz (2026)</span><span class="chip b">Bulgular az ve genel</span></div>
+<h3>Yönetici Özeti</h3>
+<p>Uzaktan çalışma, çalışan verimliliğini artırma potansiyeline sahip olmakla birlikte sonuçlar işin niteliğine, yönetim yaklaşımına ve iletişim süreçlerine bağlıdır. Güncel araştırmalar, hibrit çalışmanın verimliliği koruyabildiğini ve çalışan bağlılığını artırabildiğini göstermektedir. Bu nedenle kurumların uzaktan çalışma politikalarını yalnızca ofiste geçirilen süreye göre değil, ölçülebilir performans göstergelerine göre tasarlaması önerilmektedir.</p>
+<h3>Araştırma Bulguları</h3>
+<h4>1. Verimlilik üzerindeki etkiler</h4>
+<p>2026 yılında yayımlanan, 82 araştırmadan elde edilen 3.574 tahmini inceleyen bir meta-analiz, uzaktan çalışmanın ortalama verimlilik etkisinin küçük ancak pozitif olduğunu ortaya koymuştur. Bununla birlikte etkiler araştırma yöntemine, çalışma biçimine ve çalışan gruplarına göre değişmektedir. Bu sonuç, uzaktan çalışmanın her işte aynı ölçüde verimlilik artışı sağlayacağı anlamına gelmemektedir.</p>
+<h4>2. Hibrit çalışma ve çalışan performansı</h4>
+<p><i>Nature</i> dergisinde yayımlanan, 1.612 çalışanla gerçekleştirilen altı aylık randomize kontrollü araştırmada, haftada iki gün evden çalışmaya dayalı hibrit modelin performans değerlendirmelerini olumsuz etkilemediği ve çalışanların işten ayrılma oranını yaklaşık üçte bir azalttığı görülmüştür. Bulgular, esnek çalışma düzeninin performansı korurken çalışan bağlılığına katkıda bulunabileceğini göstermektedir.</p>
+<h4>3. Başlıca avantajlar ve riskler</h4>
+<ul><li><b>Avantajlar:</b> İşe gidiş geliş süresinin azalması, çalışma saatlerinin daha esnek yönetilmesi, kesintisiz çalışma fırsatları ve çalışan memnuniyetinin artması.</li>
+<li><b>Riskler:</b> Ekip içi iletişimin zayıflaması, sosyal etkileşimin azalması, iş ve özel yaşam sınırlarının bulanıklaşması ve performansın ölçülmesinde güçlükler.</li></ul>
+<p>Uzaktan çalışmanın etkisi; görevlerin bağımsız yürütülebilirliğine, teknolojik altyapıya, yöneticilerin iletişim becerilerine ve hedeflerin açıklığına bağlıdır.</p>
+<h3>Sonuç ve Öneriler</h3>
+<p>Kurumların tamamen uzaktan veya tamamen ofisten çalışma modellerini tek seçenek olarak değerlendirmek yerine, işin gereksinimlerine uygun hibrit modelleri değerlendirmesi önerilir. Performans; tamamlanan iş miktarı, kalite, müşteri memnuniyeti, hedef gerçekleşme oranı ve çalışan bağlılığı gibi göstergelerle izlenmelidir. Ayrıca düzenli ekip toplantıları, açık performans hedefleri ve çalışan geri bildirimleri desteklenmelidir.</p>
+<p><b>Genel sonuç:</b> Uzaktan çalışma, doğru yönetildiğinde verimliliği koruyabilir veya sınırlı ölçüde artırabilir. En uygun model, çalışan esnekliği ile iş birliği gereksinimleri arasında denge kuran ve sonuçları ölçülebilir verilerle değerlendiren modeldir.</p>
+<h3>Kaynakça</h3>
+<ol><li>Mang, C. F. ve Anwar, A. (2026). <i>Does Working from Home Improve Employees’ Productivity? Empirical Evidence from a Meta-Analysis.</i> ILR Review. doi.org/10.1177/00197939261456260</li>
+<li>Bloom, N. ve diğerleri (2024). <i>Hybrid working from home improves retention without damaging performance.</i> Nature. doi.org/10.1038/s41586-024-07500-2</li></ol>
+</div>
+
+<div class="panel" data-group="p1" data-model="Gemini">
+<div class="verdict"><span class="chip g">Okunaklı, kurumsal yapı</span><span class="chip b">Hiç kaynak yok</span><span class="chip b">“%13–22 artış” genellemesi desteksiz</span></div>
+<h3>Yönetici Özeti</h3>
+<p>Uzaktan çalışma modeli, çalışan verimliliğinde esneklik, odaklanma artışı ve yol süresinin ortadan kalkması gibi unsurlarla %13-%22 oranında performans artışı sağlamaktadır. Ancak etkili iletişim araçlarının eksikliği, iş-yaşam dengesinin bozulması ve sosyal izolasyon uzun vadede verimlilik kaybına neden olabilmektedir. Şirketlerin verimliliği sürdürülebilir kılmak için hibrit çalışma modeline geçiş yapmaları, performans odaklı (çıktı bazlı) değerlendirme kriterleri benimsemeleri ve dijital iletişim altyapılarını güçlendirmeleri önerilmektedir.</p>
+<h3>1. Giriş ve Amaç</h3>
+<p>Son yıllarda dijital dönüşümün hız kazanmasıyla birlikte uzaktan çalışma (remote work), iş dünyasının temel çalışma modellerinden biri haline gelmiştir. Bu araştırmanın amacı; uzaktan çalışmanın iş gücü verimliliği, motivasyonu ve kurumsal performans üzerindeki artı ve eksi yönlerini analiz etmektir.</p>
+<h3>2. Verimliliği Artıran Faktörler</h3>
+<ul><li><b>Zaman Tasarrufu ve Odaklanma:</b> Günlük yolda geçen sürenin (commute) ortadan kalkması, çalışanların güne daha az stresli başlamasını ve daha odaklı çalışmasını sağlar.</li>
+<li><b>Esnek Çalışma Saatleri:</b> Çalışanlar en verimli oldukları zaman aralıklarında (bireysel kronotip) yoğun odaklanma gerektiren görevleri daha hızlı tamamlayabilmektedir.</li>
+<li><b>Operasyonel Kesintilerin Azalması:</b> Ofis içi plansız bölünmelerin ve ayaküstü toplantıların azalması, derinleşerek çalışma (deep work) olanağı sunar.</li></ul>
+<h3>3. Karşılaşılan Zorluklar ve Riskler</h3>
+<ul><li><b>İletişim ve Koordinasyon Aksaklıkları:</b> Asenkron iletişim süreçlerinin doğru yönetilememesi, bilgi akışında gecikmelere yol açabilir.</li>
+<li><b>Sosyal İzolasyon ve Aidiyet Kaybı:</b> Yüz yüze etkileşimin azalması, takım ruhunun ve kurum kültürünün zayıflamasına neden olabilir.</li>
+<li><b>Tükenmişlik (Burnout) Riski:</b> Mesai saatleri ile özel yaşam arasındaki sınırların belirsizleşmesi uzun vadede motivasyon ve verimlilik düşüşüne yol açmaktadır.</li></ul>
+<h3>4. Sonuç ve Stratejik Öneriler</h3>
+<ol><li><b>Hibrit Model:</b> Haftada 2-3 gün ofis, 2-3 gün uzaktan çalışma modeli uygulanmalıdır.</li>
+<li><b>Çıktı Odaklı Değerlendirme:</b> Mesai saatine değil, tamamlanan proje ve görev çıktılarına odaklanan KPI'lar belirlenmelidir.</li>
+<li><b>Ergonomi ve Teknolojik Altyapı:</b> Çalışanlara güvenli uzaktan erişim sistemleri ve ergonomik ekipman desteği sağlanmalıdır.</li></ol>
+</div>
+
+<div class="panel" data-group="p1" data-model="DeepSeek">
+<div class="verdict"><span class="chip g">Ölçüm yöntemi nüansı iyi</span><span class="chip b">1 sayfa sınırını aşıyor</span><span class="chip b">Boş atıf işaretleri, zayıf örneklemler</span></div>
+<h3>Yönetici Özeti</h3>
+<p>Uzaktan çalışmanın verimlilik üzerindeki etkisine dair kanıtlar, son yıllarda önemli ölçüde olgunlaşmış olsa da tek bir genelgeçer sonuçtan söz etmek mümkün değildir. Bulgular, etkinin ölçüm yöntemine, çalışma modeline ve bağlama göre farklılaştığını göstermektedir. Özellikle büyük ölçekli meta-analizler, uzaktan çalışmanın bireysel performans üzerindeki olumlu etkisinin küçük ve tutarlı olduğunu, ancak bu etkinin ağırlıklı olarak öz değerlendirme temelli ölçümlerde görünür hale geldiğini ortaya koymaktadır . Yönetici değerlendirmeleri ve nesnel performans ölçütleri kullanıldığında ise ilişki zayıflamakta ve istatistiksel olarak anlamsızlaşmaktadır .</p>
+<p>Öte yandan saha çalışmaları, uzaktan çalışmanın iş-yaşam dengesi, zaman yönetimi ve kesintilerin azalması gibi süreç değişkenleri üzerinden dolaylı bir verimlilik artışı sağlayabileceğini göstermektedir . Nijerya’da 294 katılımcıyla yürütülen bir araştırmada, iş esnekliği ve dijital iletişim-İşbirliği değişkenlerinin verimlilik üzerinde anlamlı ve pozitif etkisi olduğu, bu değişkenlerin verimlilikteki varyansın %67’sini açıkladığı raporlanmıştır . Ancak bu tür bulgular, örneklem ve bağlam bağımlılığı nedeniyle genellenebilirlik açısından dikkatle yorumlanmalıdır.</p>
+<p>Yöneticiler için temel çıkarım şudur: Uzaktan çalışma kendi başına bir verimlilik anahtarı değildir; etkisi büyük ölçüde hangi işlerin, hangi koşullarda ve hangi destek sistemleriyle yapıldığına bağlıdır. Hibrit modellerde asenkron iletişim protokollerinin benimsenmesi, esnek zamanlama ve dijital araç altyapısının güçlendirilmesi, verimlilik beklentilerini yönetmek için öncelikli adımlar olarak öne çıkmaktadır .</p>
+<h3>Araştırma Bulguları Belgesi (1 sayfa)</h3>
+<h4>Amaç ve Kapsam</h4>
+<p>Bu belge, uzaktan çalışma düzenlemelerinin çalışan verimliliği üzerindeki etkisine ilişkin mevcut kanıtları özetlemektedir. İnceleme, meta-analizler, saha araştırmaları ve ampirik çalışmalardan elde edilen bulguları sentezlemektedir.</p>
+<h4>Temel Bulgu 1: Etki Küçük ve Ölçüme Duyarlıdır</h4>
+<p>89 nicel çalışmayı kapsayan bir meta-analiz, uzaktan çalışma kullanımı ve yoğunluğu ile bireysel performans arasında küçük ama tutarlı bir pozitif ilişki bulmuştur . Ancak bu ilişki temel olarak öz değerlendirme verilerine dayanmaktadır. Yönetici değerlendirmeleri ve nesnel performans ölçütleri kullanıldığında ilişki zayıf ve istatistiksel olarak anlamsızdır . Bu, uzaktan çalışmanın verimlilik etkisinin en azından bir kısmının algı temelli olabileceğine işaret etmektedir.</p>
+<h4>Temel Bulgu 2: Süreç Değişkenleri Üzerinden Dolaylı Etki</h4>
+<p>Hindistan’da yürütülen bir saha çalışması, uzaktan çalışmanın zaman yönetimi (ortalama = 4,00), iş-yaşam dengesi (ortalama = 3,82) ve kesintilerin azalması (ortalama = 3,73) boyutlarında olumlu algılandığını göstermiştir . Ancak aynı çalışmada ekip katılımı (ortalama = 2,82) ve iletişim etkinliği (ortalama = 3,18) en zayıf boyutlar olarak öne çıkmıştır . Bu bulgu, verimlilik artışının işbirliği ve iletişim maliyetleri tarafından sınırlandırılabileceğini ima etmektedir.</p>
+<h4>Temel Bulgu 3: Esneklik ve Dijital Altyapı Belirleyici</h4>
+<p>Nijerya’da 294 çalışanla yapılan bir araştırma, iş esnekliğinin verimlilik üzerinde anlamlı ve pozitif bir etkisi olduğunu (β = 0,472, p &lt; 0,05), dijital iletişim ve işbirliğinin de benzer şekilde anlamlı bir katkı sağladığını (β = 0,389, p &lt; 0,05) ortaya koymuştur . Regresyon modeli, bu değişkenlerin verimlilikteki varyansın %67,1’ini açıkladığını göstermektedir . Ancak bu bulguların tek bir ülke ve örneklem bağlamında elde edildiği unutulmamalıdır.</p>
+<h4>Temel Bulgu 4: Hibrit Model Baskın Çalışma Düzeni</h4>
+<p>Araştırmalar, katılımcıların ağırlıklı olarak hibrit çalışma düzeninde olduğunu ve bu modelin tam uzaktan çalışmaya kıyasla daha dengeli sonuçlar ürettiğini göstermektedir . Hibrit model, uzaktan çalışmanın odaklanma avantajlarını korurken yüz yüze etkileşimin işbirliği üzerindeki olumlu katkısını da sürdürebilmektedir.</p>
+<h4>Sonuç ve Öneriler</h4>
+<p>Uzaktan çalışmanın verimlilik üzerindeki etkisi koşullu ve ölçüm bağımlıdır. İşletmeler için pratik öneriler şunlardır:</p>
+<ol><li>Asenkron iletişim protokolleri benimsenmeli; böylece hem odaklanma korunmalı hem de işbirliği maliyetleri azaltılmalıdır .</li>
+<li>Esnek zamanlama politikaları güçlendirilmeli, çalışanların iş-yaşam dengesi desteklenmelidir .</li>
+<li>Dijital araç ve altyapı yatırımları sürdürülmeli; özellikle iletişim ve işbirliği platformlarının etkinliği artırılmalıdır .</li>
+<li>Verimlilik değerlendirmelerinde öz değerlendirme ile nesnel/yönetici değerlendirmeleri birlikte kullanılmalı; tek bir ölçüme dayanılmamalıdır .</li></ol>
+</div>
+
+<div class="panel" data-group="p1" data-model="Perplexity">
+<div class="verdict"><span class="chip g">Her bulguya kaynak linki</span><span class="chip g">Makro + mikro veri (BLS, IMF)</span><span class="chip b">Atıf artıkları metne karışmış (“bls+3”)</span></div>
+<h3>Yönetici Özeti</h3>
+<p>Uzaktan çalışmanın çalışan verimliliği üzerindeki etkisi tek yönlü değildir; güncel araştırmalar genellikle <b>küçük ölçekte olumlu</b> bir ilişki göstermektedir. ABD Çalışma İstatistikleri Bürosu’nun 2024 analizinde, uzaktan çalışan oranındaki 1 puanlık artış, özel sektörde toplam faktör verimliliği büyümesinde yaklaşık 0,08 puanlık artışla ilişkilendirilmiştir. Ancak makro düzeyde etki sektörler arasında sınırlı kalabilir; hibrit modeller çoğu kuruluş için dengeyi en iyi kuran yaklaşım olarak öne çıkmaktadır.bls+3</p>
+<h3>Temel Bulgular</h3>
+<ul>
+<li><b>Hibrit çalışma</b> genellikle bireysel veya firma düzeyinde verimliliği büyük ölçüde nötr etkiler; evde çalışmanın sessiz ortam ve kısa işe gidiş-geliş avantajları ile iletişim, öğrenme ve inovasyon zorlukları birbirini dengeleyebilir.[imf]</li>
+<li><b>Tam uzaktan çalışma</b> yönetim kalitesine, işin doğasına ve dijital altyapıya göre olumlu ya da olumsuz sonuçlar üretebilir. Erken pandemi çalışmalarında hem büyük olumlu hem de büyük olumsuz etkiler rapor edilmiştir.[imf]</li>
+<li>108 çalışmayı ve 45.288 kişiyi kapsayan bir meta-analiz, uzaktan çalışmanın iş tatmini, örgütsel bağlılık, amir tarafından değerlendirilen performans ve işten ayrılma niyeti üzerinde <b>küçük ama olumlu</b> etkiler bulmuştur.[onlinelibrary.wiley]</li>
+<li>Hibrit çalışma, iş tatminini artırmakta ve işten ayrılma oranını yaklaşık üçte bir oranında azaltmaktadır; bu da dolaylı olarak verimlilik ve kurumsal süreklilik açısından önemlidir.[pmc.ncbi.nlm.nih]</li>
+<li>Sistematik literatür incelemeleri, esnek çalışmanın işe gidiş-geliş süresinin azalması, iş-yaşam dengesi ve çalışan memnuniyeti üzerinden verimliliği destekleyebildiğini; ancak sosyal izolasyon, dijital yorgunluk, iletişim sorunları ve sınırların bulanıklaşması risklerini de ortaya koymaktadır.link.springer+1</li>
+</ul>
+<h3>Uygulama Önerileri</h3>
+<ol><li>Tüm roller için tek bir model uygulamak yerine, görev bazlı hibrit politikalar tasarlayın.</li>
+<li>Çıktı temelli performans ölçütleri kullanın; yalnızca çevrimiçi olma süresine dayanmayın.</li>
+<li>Ekip içi eşzamanlı çalışma günleri belirleyerek iş birliği ve bilgi paylaşımını koruyun.</li>
+<li>Uzaktan çalışanlara güvenli erişim, donanım, eğitim ve net iletişim kuralları sağlayın.</li>
+<li>Verimliliği periyodik olarak çalışan memnuniyeti, teslim süreleri, kalite göstergeleri ve personel devir oranıyla birlikte izleyin.</li></ol>
+<p><b>Sonuç:</b> Uzaktan çalışma, doğru yönetildiğinde verimliliği hafif ölçüde artırabilir; en güçlü sonuçlar genellikle esneklik, iyi dijital altyapı ve planlı hibrit iş birliği ile desteklendiğinde görülür.bls+2</p>
+</div>
+</section>
+
+<!-- ================= PROMPT 2 ================= -->
+<section id="p2">
+<h2>Prompt 2 · Bireysel kredi tahsis akış şeması</h2>
+<div class="prompt">Türkiye'deki bankaların bireysel kredi tahsis sürecinin akış şemasını draw.io (diagrams.net) kodu olarak hazırla.</div>
+<div class="tabs" data-group="p2"></div>
+
+<div class="panel" data-group="p2" data-model="Claude">
+<div class="verdict"><span class="chip g">En fazla Türkiye'ye özgü adım (KKB, MASAK, BDDK, NVİ)</span><span class="chip g">Otomatik / gri bölge / manuel ayrımı</span><span class="chip b">Kenar etiketleri sade, ret ucu çakışabiliyor</span></div>
+<div class="diagram" data-xml="x-claude"></div>
+<details><summary>draw.io kodunu göster</summary><pre class="xmlsrc" data-xml="x-claude"></pre></details>
+</div>
+<div class="panel" data-group="p2" data-model="ChatGPT">
+<div class="verdict"><span class="chip g">En eksiksiz karar mantığı (müşteri kabulü, son kontrol)</span><span class="chip g">Kullanım talimatı net</span><span class="chip b">Türkiye'ye özgü kurum/mevzuat adı yok</span></div>
+<div class="diagram" data-xml="x-chatgpt"></div>
+<details><summary>draw.io kodunu göster</summary><pre class="xmlsrc" data-xml="x-chatgpt"></pre></details>
+</div>
+<div class="panel" data-group="p2" data-model="Gemini">
+<div class="verdict"><span class="chip g">Kompakt, renk kodlu</span><span class="chip b">Kenarlarda &lt;mxGeometry&gt; yerine &lt;geometry&gt; – draw.io'da oklar düzgün çıkmayabilir</span><span class="chip b">Yazım hatası: “Kullarım”</span></div>
+<div class="diagram" data-xml="x-gemini"></div>
+<details><summary>draw.io kodunu göster</summary><pre class="xmlsrc" data-xml="x-gemini"></pre></details>
+</div>
+<div class="panel" data-group="p2" data-model="DeepSeek">
+<div class="verdict"><span class="chip g">Görsel olarak en şık stil</span><span class="chip g">Akış açıklaması eklemiş</span><span class="chip b">En sade süreç; teklif, teminat, KKB bildirimi yok</span></div>
+<div class="diagram" data-xml="x-deepseek"></div>
+<details><summary>draw.io kodunu göster</summary><pre class="xmlsrc" data-xml="x-deepseek"></pre></details>
+</div>
+<div class="panel" data-group="p2" data-model="Perplexity">
+<div class="verdict"><span class="chip g">KVKK rıza adımı ve izleme/tahsilat var</span><span class="chip b">Etiketlerde “\n” draw.io'da satır sonu yerine düz metin görünür</span><span class="chip b">Otomatik ve manuel karar tek kutuda</span></div>
+<div class="diagram" data-xml="x-perplexity"></div>
+<details><summary>draw.io kodunu göster</summary><pre class="xmlsrc" data-xml="x-perplexity"></pre></details>
+<p class="note">Önizlemede okunabilirlik için “\n” satır sonu olarak gösterildi; draw.io'da düz metin olarak çıkar.</p>
+</div>
+<p class="note">Diyagramlar her modelin ürettiği XML'den bu sayfada çizildi (kutu konumları ve bağlantılar birebir; oklar düz çizgi olarak basitleştirildi).</p>
+</section>
+
+<!-- ================= PROMPT 3 ================= -->
+<section id="p3">
+<h2>Prompt 3 · Müşteri şikayeti analizi (Python)</h2>
+<div class="prompt">Bir yıllık müşteri şikayetlerini içeren bir Excel dosyasını Jupyter Notebook ile analiz edeceğim. Sütunlar: talep_acilis, talep_kapanis, musteri_no, sicil_no, talep_metni. Çıktılar: 1) kategori bazında talep sayısı ve yüzdesi (aylık ve yıllık) 2) kategori bazında tekil müşteri ve tekil çalışan 3) her çalışanın tamamladığı talep sayısı ve ortalama cevap süresi.</div>
+<div class="tabs" data-group="p3"></div>
+
+<div class="panel" data-group="p3" data-model="Claude">
+<div class="verdict"><span class="chip g">Çalışır, kısa, 3 çıktının hepsi</span><span class="chip g">Sadece kapanmış talepler “tamamlanan” sayılıyor</span><span class="chip g">Veri kalitesi kontrolü + Excel'e aktarım</span><span class="chip b">Görselleştirme yok</span></div>
+<p>Talep kategorileri veride hazır olmadığı için kod, kategorileri <code>talep_metni</code> sütunundan anahtar kelimelerle çıkarıyor. <code>KATEGORILER</code> sözlüğünü kendi şikayet tiplerine göre düzenleyebilirsin. Daha isabetli bir sınıflandırma istersen bu adımı ML/LLM tabanlı bir sınıflandırıcıyla değiştirebilirsin.</p>
+<pre>
+# 1) Kurulum ve veri okuma
+import pandas as pd, re
+
+df = pd.read_excel("sikayetler.xlsx")  # dosya adını güncelle
+df["talep_acilis"]  = pd.to_datetime(df["talep_acilis"], errors="coerce")
+df["talep_kapanis"] = pd.to_datetime(df["talep_kapanis"], errors="coerce")
+df["talep_metni"]   = df["talep_metni"].fillna("").astype(str)
+df["ay"] = df["talep_acilis"].dt.to_period("M").astype(str)
+df["sure_saat"] = (df["talep_kapanis"] - df["talep_acilis"]).dt.total_seconds() / 3600
+
+# 2) Kategori atama (anahtar kelime tabanlı – kendi kategorilerine göre düzenle)
+KATEGORILER = {
+    "Kredi Kartı":       ["kredi kart", "kart aidat", "ekstre", "limit", "taksit"],
+    "Kredi":             ["kredi", "faiz", "erken kapama", "dosya masraf"],
+    "Mobil/İnternet":    ["mobil", "uygulama", "internet şube", "şifre", "giriş", "hata"],
+    "Para Transferi":    ["eft", "havale", "fast", "transfer", "swift"],
+    "Ücret/Komisyon":    ["ücret", "komisyon", "masraf", "kesinti"],
+    "ATM":               ["atm", "para çek", "para yatır"],
+    "Hizmet Kalitesi":   ["personel", "şube", "bekle", "ilgisiz", "çağrı merkez"],
+    "Dolandırıcılık":    ["dolandır", "izinsiz", "şüpheli", "sahte"],
+}
+def kategori_bul(metin):
+    m = metin.lower()
+    for kat, kelimeler in KATEGORILER.items():
+        if any(k in m for k in kelimeler):
+            return kat
+    return "Diğer"
+df["kategori"] = df["talep_metni"].apply(kategori_bul)
+
+# 3) Çıktı 1 – Kategori dağılımı (yıllık ve aylık)
+yillik = df["kategori"].value_counts().rename("talep_sayisi").to_frame()
+yillik["yuzde"] = (yillik["talep_sayisi"] / yillik["talep_sayisi"].sum() * 100).round(2)
+display(yillik)
+
+aylik_adet  = pd.crosstab(df["kategori"], df["ay"])
+aylik_yuzde = (pd.crosstab(df["kategori"], df["ay"], normalize="columns") * 100).round(2)
+display(aylik_adet); display(aylik_yuzde)
+
+# 4) Çıktı 2 – Kategori bazında tekil müşteri ve çalışan sayısı
+tekil = df.groupby("kategori").agg(
+    tekil_musteri=("musteri_no", "nunique"),
+    tekil_calisan=("sicil_no", "nunique"),
+    talep_sayisi=("musteri_no", "size"),
+).sort_values("talep_sayisi", ascending=False)
+display(tekil)
+
+# 5) Çıktı 3 – Çalışan bazında tamamlanan talep ve ortalama süre
+tamam = df[df["talep_kapanis"].notna() &amp; (df["sure_saat"] &gt;= 0)]
+calisan = tamam.groupby("sicil_no").agg(
+    tamamlanan_talep=("sure_saat", "size"),
+    ort_sure_saat=("sure_saat", "mean"),
+    medyan_sure_saat=("sure_saat", "median"),
+).round(2).sort_values("tamamlanan_talep", ascending=False)
+display(calisan)
+
+# 6) Veri kalitesi kontrolü
+print("Kapanış tarihi boş:", df["talep_kapanis"].isna().sum())
+print("Negatif süre:", (df["sure_saat"] &lt; 0).sum())
+print("'Diğer' oranı: %", round((df["kategori"] == "Diğer").mean() * 100, 1))
+
+# 7) Excel'e aktarım
+with pd.ExcelWriter("sikayet_analizi.xlsx") as w:
+    yillik.to_excel(w, sheet_name="Yillik_Kategori")
+    aylik_adet.to_excel(w, sheet_name="Aylik_Adet")
+    aylik_yuzde.to_excel(w, sheet_name="Aylik_Yuzde")
+    tekil.to_excel(w, sheet_name="Tekil_Musteri_Calisan")
+    calisan.to_excel(w, sheet_name="Calisan_Performans")
+</pre>
+</div>
+
+<div class="panel" data-group="p3" data-model="ChatGPT">
+<div class="verdict"><span class="chip g">En iddialı yaklaşım: TF-IDF + K-Means ile otomatik kategori</span><span class="chip g">İyi açıklamalar (ilk yanıt vs. kapanış süresi farkı)</span><span class="chip b">Kod eksik/kopuk: <code>analiz</code> tanımsız, vectorizer yarıda kesik, <code>kategori_anahtar_kelimeleri</code> tanımsız – olduğu gibi çalışmaz</span></div>
+<p>Bu analiz için Python, pandas ve scikit-learn kullanabiliriz. <code>talep_metni</code> sütununda hazır kategori bulunmadığından, talepleri metin içeriklerine göre otomatik gruplandırmak için TF-IDF ve K-Means yöntemlerini kullanacağız. Kod; aylık/yıllık kategori dağılımı, tekil müşteri/çalışan, çalışan bazında kapanan talep ve ortalama süre, kategori anahtar kelimeleri ve Excel'e aktarım üretir.</p>
+<pre>
+%pip install pandas numpy scikit-learn openpyxl matplotlib seaborn
+
+# 2. Verinin yüklenmesi ve hazırlanması
+import pandas as pd
+import numpy as np
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+DOSYA = "musteri_sikayetleri.xlsx"
+ANALIZ_YILI = 2025  # Analiz edilecek yılı değiştirin
+df = pd.read_excel(DOSYA)
+
+GEREKLI_SUTUNLAR = ["talep_acilis", "talep_kapanis", "musteri_no", "sicil_no", "talep_metni"]
+eksik_sutunlar = set(GEREKLI_SUTUNLAR) - set(df.columns)
+if eksik_sutunlar:
+    raise ValueError(f"Eksik sütunlar: {eksik_sutunlar}")
+
+for col in ["talep_acilis", "talep_kapanis"]:
+    df[col] = pd.to_datetime(df[col], errors="coerce")
+
+df["talep_metni"] = df["talep_metni"].fillna("").astype(str).str.strip()
+for col in ["musteri_no", "sicil_no"]:
+    df[col] = df[col].astype("string").str.strip()
+    df[col] = df[col].replace("", pd.NA)
+
+# 3. Talep metinlerinden otomatik kategori oluşturma
+TURKCE_DURAK_KELIMELER = [
+    "ve", "veya", "ile", "bir", "bu", "şu", "da", "de",
+    "için", "ama", "ancak", "çok", "az", "daha", "gibi",
+    "olarak", "olan", "oldu", "olmuş", "var", "yok",
+    "ben", "bana", "biz", "siz", "ilgili", "hakkında",
+    "talep", "müşteri", "merhaba", "teşekkür", "ediyorum",
+    "edildi", "edilmesi", "konu", "konusunda", "yardım"]
+
+def metin_temizle(metin):
+    metin = str(metin).lower()
+    metin = re.sub(r"https?://\S+|www\.\S+", " ", metin)
+    metin = re.sub(r"\S+@\S+", " ", metin)
+    metin = re.sub(r"[^a-zA-ZçğıöşüÇĞİÖŞÜ0-9\s]", " ", metin)
+    metin = re.sub(r"\s+", " ", metin).strip()
+    return metin
+
+analiz["temiz_metin"] = analiz["talep_metni"].apply(metin_temizle)   # ⚠ 'analiz' hiç tanımlanmamış
+metin_maskesi = analiz["temiz_metin"].str.len() &gt; 0
+if metin_maskesi.sum() &lt; 2:
+    raise ValueError("Kategorilendirme için yeterli metin bulunamadı.")
+metinler = analiz.loc[metin_maskesi, "temiz_metin"]
+vectorizer = TfidfVectorizer(
+    stop_words=TURKCE_DURAK_KELIMELER,
+    ngram_range=(1, 2),
+    min_df=1,
+    max_df=0.98,
+    max_features=10000,
+# ⚠ çıktı burada kesiliyor – KMeans, 'ay', 'cevap_suresi_saat' tanımları yok
+
+# Örnek eşleştirme: Gerçek anahtar kelimeleri inceleyerek düzenleyin.
+KATEGORI_ADLARI = {
+    # "Kategori 1": "Kredi Kartı",
+    # "Kategori 2": "Mobil Bankacılık",
+    # "Kategori 3": "Havale / EFT",
+}
+analiz["kategori"] = analiz["kategori"].replace(KATEGORI_ADLARI)
+
+# 4. Aylık ve yıllık kategori sayısı ve yüzdesi
+aylik = (analiz.groupby(["ay", "kategori"], dropna=False).size()
+         .rename("talep_sayisi").reset_index())
+aylik["toplam_talep"] = aylik.groupby("ay")["talep_sayisi"].transform("sum")
+aylik["yuzde"] = (aylik["talep_sayisi"] / aylik["toplam_talep"] * 100).round(2)
+aylik = aylik.sort_values(["ay", "talep_sayisi"], ascending=[True, False])
+
+yillik = (analiz.groupby("kategori", dropna=False).size()
+          .rename("talep_sayisi").reset_index())
+yillik["toplam_talep"] = yillik["talep_sayisi"].sum()
+yillik["yuzde"] = (yillik["talep_sayisi"] / yillik["toplam_talep"] * 100).round(2)
+yillik = yillik.sort_values("talep_sayisi", ascending=False)
+display(aylik); display(yillik)
+
+# 5. Kategori bazında tekil müşteri ve çalışan sayısı
+kategori_ozeti = (analiz.groupby("kategori", dropna=False)
+    .agg(talep_sayisi=("talep_metni", "size"),
+         tekil_musteri_sayisi=("musteri_no", "nunique"),
+         tekil_calisan_sayisi=("sicil_no", "nunique"))
+    .reset_index())
+kategori_ozeti["yuzde"] = (kategori_ozeti["talep_sayisi"] / kategori_ozeti["talep_sayisi"].sum() * 100).round(2)
+display(kategori_ozeti.sort_values("talep_sayisi", ascending=False))
+
+# 6. Çalışan bazında tamamlanan talepler ve ortalama cevap süresi
+tamamlanan = analiz[analiz["talep_kapanis"].notna()
+                    &amp; analiz["cevap_suresi_saat"].notna()
+                    &amp; analiz["sicil_no"].notna()].copy()
+calisan_ozeti = (tamamlanan.groupby("sicil_no")
+    .agg(tamamlanan_talep_sayisi=("talep_metni", "size"),
+         ortalama_cevap_suresi_saat=("cevap_suresi_saat", "mean"),
+         ortalama_cevap_suresi_gun=("cevap_suresi_saat", lambda x: x.mean() / 24),
+         medyan_cevap_suresi_saat=("cevap_suresi_saat", "median"),
+         tekil_musteri_sayisi=("musteri_no", "nunique"))
+    .reset_index().sort_values("tamamlanan_talep_sayisi", ascending=False))
+sure_sutunlari = ["ortalama_cevap_suresi_saat", "ortalama_cevap_suresi_gun", "medyan_cevap_suresi_saat"]
+calisan_ozeti[sure_sutunlari] = calisan_ozeti[sure_sutunlari].round(2)
+display(calisan_ozeti)
+
+# 7. Sonuçları Excel dosyasına aktarma (tam ay x kategori tablosu)
+anahtar_kelime_df = pd.DataFrame([
+    {"kategori": kategori, "anahtar_kelimeler": ", ".join(kelimeler)}
+    for kategori, kelimeler in kategori_anahtar_kelimeleri.items()])   # ⚠ tanımsız
+tum_aylar = sorted(analiz["ay"].dropna().unique())
+tum_kategoriler = sorted(analiz["kategori"].dropna().unique())
+tam_aylik_index = pd.MultiIndex.from_product([tum_aylar, tum_kategoriler], names=["ay", "kategori"])
+aylik_tam = (aylik.set_index(["ay", "kategori"]).reindex(tam_aylik_index, fill_value=0).reset_index())
+aylik_tam["toplam_talep"] = aylik_tam.groupby("ay")["talep_sayisi"].transform("sum")
+aylik_tam["yuzde"] = np.where(aylik_tam["toplam_talep"] &gt; 0,
+    aylik_tam["talep_sayisi"] / aylik_tam["toplam_talep"] * 100, 0).round(2)
+# ⚠ ExcelWriter bloğu yok
+
+# 8. İsteğe bağlı görselleştirme
+import matplotlib.pyplot as plt
+grafik_verisi = aylik_tam.pivot(index="ay", columns="kategori", values="talep_sayisi").fillna(0)
+grafik_verisi.plot(kind="bar", stacked=True, figsize=(14, 6))
+plt.title(f"{ANALIZ_YILI} Aylık Talep Dağılımı")
+plt.xlabel("Ay"); plt.ylabel("Talep Sayısı"); plt.xticks(rotation=45)
+plt.legend(title="Kategori", bbox_to_anchor=(1.02, 1), loc="upper left")
+plt.tight_layout(); plt.show()
+</pre>
+<p class="note">⚠ işaretli yorumlar değerlendirme notudur, orijinal çıktıda yoktur. Kod blokları orijinalde tek satıra yapışık geldiği için satırlara bölündü.</p>
+</div>
+
+<div class="panel" data-group="p3" data-model="Gemini">
+<div class="verdict"><span class="chip g">Çalışır, temiz bölümleme</span><span class="chip b">Kapanmamış talepler de “tamamlanan” sayılıyor</span><span class="chip b">“kredi” önce kontrol ediliyor → kredi kartı şikayetleri “Kredi İşlemleri”ne düşer</span></div>
+<p>Jupyter Notebook üzerinde çalıştırabileceğiniz tam Python kodu aşağıdadır:</p>
+<pre>
+import pandas as pd
+import numpy as np
+
+# 1. Dosya Yükleme ve Ön İşleme
+df = pd.read_excel('musteri_sikayetleri.xlsx')
+
+# Tarih sütunlarını datetime formatına çevirme
+df['talep_acilis'] = pd.to_datetime(df['talep_acilis'])
+df['talep_kapanis'] = pd.to_datetime(df['talep_kapanis'])
+
+# Yanıt Süresi (Saat cinsinden hesaplama)
+df['cevap_suresi_saat'] = (df['talep_kapanis'] - df['talep_acilis']).dt.total_seconds() / 3600.0
+
+# Ay bilgisi çıkarma
+df['yil_ay'] = df['talep_acilis'].dt.to_period('M')
+
+# Metin Madenciliği ile Temel Kategori Belirleme (Örnek Basit Kural Bazlı Sınıflandırma)
+def kategori_belirle(text):
+    if pd.isna(text):
+        return "Diğer"
+    text = str(text).lower()
+    if any(k in text for k in ['kredi', 'faiz', 'taksit']):
+        return "Kredi İşlemleri"
+    elif any(k in text for k in ['kart', 'aidat', 'limit', 'pos']):
+        return "Kredi Kartı"
+    elif any(k in text for k in ['mobil', 'internet', 'şifre', 'giriş', 'uygulama']):
+        return "Dijital Bankacılık"
+    elif any(k in text for k in ['atm', 'para çekme', 'para yatırma']):
+        return "ATM İşlemleri"
+    elif any(k in text for k in ['havale', 'eft', 'fast', 'virman']):
+        return "Transfer İşlemleri"
+    else:
+        return "Genel / Diğer"
+
+df['kategori'] = df['talep_metni'].apply(kategori_belirle)
+
+# ÇIKTI 1: Talep Kategorileri ve Her Kategoriye Düşen Talep Sayısı ile Yüzdesi
+yillik_kategori = df['kategori'].value_counts().reset_index()
+yillik_kategori.columns = ['Kategori', 'Talep Sayısı']
+yillik_kategori['Yüzde (%)'] = (yillik_kategori['Talep Sayısı'] / len(df)) * 100
+print("=== 1A. YILLIK TALEP KATEGORİ DAĞILIMI ===")
+print(yillik_kategori.to_string(index=False))
+
+aylik_kategori = df.groupby(['yil_ay', 'kategori']).size().unstack(fill_value=0)
+aylik_yuzde = aylik_kategori.div(aylik_kategori.sum(axis=1), axis=0) * 100
+print("\n=== 1B. AYLIK KATEGORİ TALEP SAYILARI ===")
+print(aylik_kategori)
+print("\n=== 1C. AYLIK KATEGORİ YÜZDELERİ (%) ===")
+print(aylik_yuzde.round(2))
+
+# ÇIKTI 2: Kategori Bazında Tekil Müşteri ve Tekil Çalışan Sayısı
+kategori_tekil = df.groupby('kategori').agg(
+    tekil_musteri_sayisi=('musteri_no', 'nunique'),
+    tekil_calisan_sayisi=('sicil_no', 'nunique')
+).reset_index()
+print("\n=== 2. KATEGORİ BAZINDA TEKİL MÜŞTERİ VE ÇALIŞAN SAYISI ===")
+print(kategori_tekil.to_string(index=False))
+
+# ÇIKTI 3: Her Tekil Çalışanın Yıl Boyunca Tamamladığı Talep Sayısı ve Ort. Cevap Süresi
+calisan_performans = df.groupby('sicil_no').agg(
+    tamamlanan_talep_sayisi=('talep_acilis', 'count'),
+    ort_cevap_suresi_saat=('cevap_suresi_saat', 'mean')
+).reset_index()
+calisan_performans['ort_cevap_suresi_saat'] = calisan_performans['ort_cevap_suresi_saat'].round(2)
+print("\n=== 3. ÇALIŞAN BAZLI PERFORMANS VE YANIT SÜRELERİ ===")
+print(calisan_performans.sort_values(by='tamamlanan_talep_sayisi', ascending=False).to_string(index=False))
+</pre>
+</div>
+
+<div class="panel" data-group="p3" data-model="DeepSeek">
+<div class="verdict"><span class="chip g">Örnek veri üretiyor → dosya olmadan denenebilir</span><span class="chip g">Ek çıktılar (kategori süresi, aylık trend)</span><span class="chip b">Negatif süreleri sessizce 0'a çekiyor; kapanmamış talepler de “tamamlanan”</span><span class="chip b">Anahtar kelimeler çakışıyor (“kart”, “limit” iki kategoride)</span></div>
+<p>Kod, talep kategorilerini otomatik olarak belirlemek için basit bir anahtar kelime tabanlı sınıflandırma kullanır; gerçek uygulamada bu kısmı kendi kategori sözlüğünüzle güncelleyebilirsiniz.</p>
+<pre>
+import pandas as pd
+import numpy as np
+from datetime import datetime
+import re
+import warnings
+warnings.filterwarnings('ignore')
+
+# 1. VERİ YÜKLEME VE ÖN İŞLEME
+# df = pd.read_excel('musteri_sikayetleri.xlsx')
+
+# Örnek veri oluşturma (gerçek kullanımda bu bloğu silin ve yukarıdaki satırı açın)
+np.random.seed(42)
+n = 1000
+tarih_araligi = pd.date_range('2025-01-01', '2025-12-31', freq='D')
+ornek_talepler = [
+    'Kredi kartımdan haksız yere para çekildi, iade istiyorum',
+    'Mobil uygulamaya giriş yapamıyorum, şifre sıfırlama çalışmıyor',
+    'Hesap hareketlerimde olmayan bir işlem var, acil kontrol edin',
+    'Kredi başvurum haftalardır sonuçlanmadı, bilgi almak istiyorum',
+    'Şubede çalışan personel çok ilgisizdi, şikayetçiyim',
+    'EFT işlemim gerçekleşmedi ama tutar hesabımdan düşüldü',
+    'Kredi kartı ekstremde hatalı faiz hesaplanmış',
+    'İnternet bankacılığı sürekli hata veriyor, işlem yapamıyorum',
+    'Hesabımdan habersiz para transferi yapılmış',
+    'Kredi başvuru sürecinde sürekli ek belge isteniyor',
+    'ATM kartımı yuttu, geri alamıyorum',
+    'Müşteri hizmetlerine ulaşamıyorum, telefonlar açılmıyor'
+]
+df = pd.DataFrame({
+    'talep_acilis': np.random.choice(tarih_araligi, n),
+    'talep_kapanis': np.random.choice(tarih_araligi, n),
+    'musteri_no': np.random.randint(10000, 10500, n),
+    'sicil_no': np.random.randint(2000, 2050, n),
+    'talep_metni': np.random.choice(ornek_talepler, n)
+})
+
+df['talep_acilis'] = pd.to_datetime(df['talep_acilis'])
+df['talep_kapanis'] = pd.to_datetime(df['talep_kapanis'])
+
+# Kapanış tarihi açılıştan önceyse düzelt veya işaretle
+df['talep_kapanis'] = np.where(df['talep_kapanis'] &lt; df['talep_acilis'],
+                               df['talep_acilis'], df['talep_kapanis'])
+
+df['cozum_suresi_gun'] = (df['talep_kapanis'] - df['talep_acilis']).dt.total_seconds() / 86400
+df['yil_ay'] = df['talep_acilis'].dt.to_period('M')
+df['yil'] = df['talep_acilis'].dt.year
+
+# 2. KATEGORİ BELİRLEME (Anahtar Kelime Tabanlı)
+kategori_sozlugu = {
+    'Kredi Kartı': ['kredi kartı', 'kart', 'ekstre', 'faiz', 'limit', 'haksız', 'iade'],
+    'Dijital Bankacılık': ['mobil', 'uygulama', 'internet bankacılığı', 'şifre', 'giriş', 'hata', 'sistem'],
+    'Hesap İşlemleri': ['hesap', 'eft', 'havale', 'transfer', 'işlem', 'bakiye', 'para çekme'],
+    'Kredi Başvurusu': ['kredi başvuru', 'kredi', 'başvuru', 'onay', 'belge', 'limit'],
+    'Müşteri Hizmetleri': ['personel', 'şube', 'müşteri hizmetleri', 'çağrı merkezi', 'ilgisiz', 'ulaşamıyorum'],
+    'ATM / Kart': ['atm', 'kart yuttu', 'kart', 'pos']
+}
+
+def kategori_bul(metin):
+    if pd.isna(metin):
+        return 'Diğer'
+    metin_lower = metin.lower()
+    for kategori, anahtar_kelimeler in kategori_sozlugu.items():
+        for kelime in anahtar_kelimeler:
+            if kelime in metin_lower:
+                return kategori
+    return 'Diğer'
+
+df['kategori'] = df['talep_metni'].apply(kategori_bul)
+
+# 3. ANALİZ 1: KATEGORİ BAZINDA TALEP SAYISI VE YÜZDESİ (AYLIK &amp; YILLIK)
+yillik_kategori = df.groupby('kategori').size().reset_index(name='talep_sayisi')
+yillik_kategori['yuzde'] = (yillik_kategori['talep_sayisi'] / yillik_kategori['talep_sayisi'].sum() * 100).round(2)
+yillik_kategori = yillik_kategori.sort_values('talep_sayisi', ascending=False)
+print(yillik_kategori.to_string(index=False))
+
+aylik_kategori = df.groupby(['yil_ay', 'kategori']).size().reset_index(name='talep_sayisi')
+aylik_toplam = df.groupby('yil_ay').size().reset_index(name='aylik_toplam')
+aylik_kategori = aylik_kategori.merge(aylik_toplam, on='yil_ay')
+aylik_kategori['yuzde'] = (aylik_kategori['talep_sayisi'] / aylik_kategori['aylik_toplam'] * 100).round(2)
+print(aylik_kategori.head(20).to_string(index=False))
+
+aylik_pivot = df.pivot_table(index='yil_ay', columns='kategori', values='talep_metni',
+                             aggfunc='count', fill_value=0)
+print(aylik_pivot.to_string())
+
+# 4. ANALİZ 2: KATEGORİ BAZINDA TEKİL MÜŞTERİ VE ÇALIŞAN SAYISI
+kategori_tekil = df.groupby('kategori').agg(
+    tekil_musteri_sayisi=('musteri_no', 'nunique'),
+    tekil_calisan_sayisi=('sicil_no', 'nunique'),
+    toplam_talep=('talep_metni', 'count')
+).reset_index().sort_values('toplam_talep', ascending=False)
+print(kategori_tekil.to_string(index=False))
+
+# 5. ANALİZ 3: HER TEKİL ÇALIŞANIN YILLIK TALEP SAYISI VE ORTALAMA SÜRE
+calisan_analiz = df.groupby('sicil_no').agg(
+    tamamlanan_talep_sayisi=('talep_metni', 'count'),
+    ortalama_cozum_suresi_gun=('cozum_suresi_gun', 'mean')
+).reset_index()
+calisan_analiz['ortalama_cozum_suresi_gun'] = calisan_analiz['ortalama_cozum_suresi_gun'].round(2)
+calisan_analiz = calisan_analiz.sort_values('tamamlanan_talep_sayisi', ascending=False)
+print(calisan_analiz.to_string(index=False))
+print(calisan_analiz[['tamamlanan_talep_sayisi', 'ortalama_cozum_suresi_gun']].describe().round(2).to_string())
+
+# 6. EK ÇIKTILAR (Opsiyonel)
+kategori_sure = df.groupby('kategori')['cozum_suresi_gun'].agg(['mean', 'median', 'count']).round(2)
+kategori_sure.columns = ['ortalama_gun', 'medyan_gun', 'talep_sayisi']
+print(kategori_sure.sort_values('ortalama_gun', ascending=False).to_string())
+
+aylik_trend = df.groupby('yil_ay').size().reset_index(name='talep_sayisi')
+print(aylik_trend.to_string(index=False))
+</pre>
+<p class="note">Okunabilirlik için başlık/print satırlarının bir kısmı kısaltıldı; mantık birebir korunmuştur.</p>
+</div>
+
+<div class="panel" data-group="p3" data-model="Perplexity">
+<div class="verdict"><span class="chip g">Çalışır; Excel'e aktarım + grafik</span><span class="chip g">ASCII varyantları (“sifre”, “giris”) düşünülmüş</span><span class="chip b">“kredi” önce → kredi kartı “Kredi ve Finansman”a düşer</span><span class="chip b">Süre sadece gün cinsinden; boş metinli talepleri siliyor</span></div>
+<p>Talep kategorisi, metin içindeki anahtar kelimelerden türetilir; kendi kategori listenize göre genişletebilirsiniz.</p>
+<pre>
+# Gerekli kütüphaneler
+import pandas as pd
+import numpy as np
+import re
+import matplotlib.pyplot as plt
+
+file_path = "musteri_sikayetleri.xlsx"
+df = pd.read_excel(file_path)
+
+df["talep_acilis"] = pd.to_datetime(df["talep_acilis"], errors="coerce")
+df["talep_kapanis"] = pd.to_datetime(df["talep_kapanis"], errors="coerce")
+
+# Temel veri temizliği
+df = df.dropna(subset=["talep_acilis", "talep_metni"])
+df["talep_metni"] = df["talep_metni"].astype(str).str.lower()
+
+# Cevap süresi: gün cinsinden
+df["cevap_suresi_gun"] = (df["talep_kapanis"] - df["talep_acilis"]).dt.total_seconds() / 86400
+df.loc[df["cevap_suresi_gun"] &lt; 0, "cevap_suresi_gun"] = np.nan
+
+category_rules = {
+    "Kredi ve Finansman": ["kredi", "finansman", "faiz", "taksit", "borç", "borc"],
+    "Kart ve Ödeme": ["kredi kartı", "kredi karti", "kart", "ödeme", "odeme", "pos", "havale", "eft"],
+    "Hesap ve Bankacılık İşlemleri": ["hesap", "bakiye", "virman", "transfer", "iban", "bloke"],
+    "Mobil / İnternet Bankacılığı": ["mobil", "internet bankacılığı", "internet bankaciligi", "uygulama", "şifre", "sifre", "giriş", "giris"],
+    "Ücret ve Masraflar": ["ücret", "ucret", "masraf", "komisyon", "bsmv", "stopaj"],
+    "Müşteri Hizmetleri": ["çağrı merkezi", "cagri merkezi", "müşteri temsilcisi", "musteri temsilcisi", "şube", "sube"],
+    "Diğer": []
+}
+
+def categorize(text):
+    for category, keywords in category_rules.items():
+        if any(keyword in text for keyword in keywords):
+            return category
+    return "Diğer"
+
+df["talep_kategorisi"] = df["talep_metni"].apply(categorize)
+df["yil"] = df["talep_acilis"].dt.year
+df["ay"] = df["talep_acilis"].dt.to_period("M").astype(str)
+
+# 1. Yıllık kategori dağılımı
+annual_category = (df.groupby("talep_kategorisi")
+    .agg(talep_sayisi=("talep_kategorisi", "size")).reset_index())
+annual_category["yuzde"] = (annual_category["talep_sayisi"] / annual_category["talep_sayisi"].sum() * 100).round(2)
+annual_category = annual_category.sort_values("talep_sayisi", ascending=False)
+print("=== YILLIK KATEGORİ DAĞILIMI ===")
+print(annual_category)
+
+# Aylık kategori dağılımı
+monthly_category = (df.groupby(["ay", "talep_kategorisi"])
+    .agg(talep_sayisi=("talep_kategorisi", "size")).reset_index())
+monthly_category["aylik_toplam"] = monthly_category.groupby("ay")["talep_sayisi"].transform("sum")
+monthly_category["yuzde"] = (monthly_category["talep_sayisi"] / monthly_category["aylik_toplam"] * 100).round(2)
+print("\n=== AYLIK KATEGORİ DAĞILIMI ===")
+print(monthly_category)
+
+# 2. Kategori bazında tekil müşteri ve çalışan sayısı
+unique_counts = (df.groupby("talep_kategorisi")
+    .agg(tekil_musteri_sayisi=("musteri_no", "nunique"),
+         tekil_calisan_sayisi=("sicil_no", "nunique"),
+         toplam_talep=("talep_kategorisi", "size"))
+    .reset_index().sort_values("toplam_talep", ascending=False))
+print("\n=== KATEGORİ BAZINDA TEKİL MÜŞTERİ VE ÇALIŞAN SAYISI ===")
+print(unique_counts)
+
+# 3. Çalışan bazında tamamlanan talep sayısı ve ortalama cevap süresi
+employee_performance = (df.dropna(subset=["cevap_suresi_gun"])
+    .groupby("sicil_no")
+    .agg(tamamlanan_talep_sayisi=("sicil_no", "size"),
+         ortalama_cevap_suresi_gun=("cevap_suresi_gun", "mean"),
+         medyan_cevap_suresi_gun=("cevap_suresi_gun", "median"))
+    .reset_index().sort_values("tamamlanan_talep_sayisi", ascending=False))
+employee_performance["ortalama_cevap_suresi_gun"] = employee_performance["ortalama_cevap_suresi_gun"].round(2)
+employee_performance["medyan_cevap_suresi_gun"] = employee_performance["medyan_cevap_suresi_gun"].round(2)
+print("\n=== ÇALIŞAN BAZINDA PERFORMANS ===")
+print(employee_performance)
+
+with pd.ExcelWriter("sikayet_analiz_sonuclari.xlsx", engine="openpyxl") as writer:
+    annual_category.to_excel(writer, sheet_name="Yillik_Kategori", index=False)
+    monthly_category.to_excel(writer, sheet_name="Aylik_Kategori", index=False)
+    unique_counts.to_excel(writer, sheet_name="Tekil_Musteri_Calisan", index=False)
+    employee_performance.to_excel(writer, sheet_name="Calisan_Performansi", index=False)
+
+plt.figure(figsize=(10, 5))
+plt.bar(annual_category["talep_kategorisi"], annual_category["talep_sayisi"])
+plt.xticks(rotation=45, ha="right")
+plt.title("Yıllık Talep Kategorisi Dağılımı")
+plt.ylabel("Talep Sayısı")
+plt.tight_layout()
+plt.show()
+</pre>
+</div>
+</section>
+
+<!-- ================= SCORE ================= -->
+<section id="score">
+<h2>Puan tablosu</h2>
+<p class="note" style="margin-bottom:12px">1–5 arası, çıktıların incelenmesine dayanan ilk değerlendirme. İstersen puanları birlikte güncelleriz.</p>
+<div class="wrap"><table>
+<thead><tr><th>Model</th><th>P1 · Araştırma</th><th>P2 · draw.io</th><th>P3 · Python</th><th>Ortalama</th></tr></thead>
+<tbody id="scoreBody"></tbody>
+</table></div>
+</section>
+
+<!-- ================= STRENGTHS / WEAKNESSES ================= -->
+<section id="sw">
+<h2>Güçlü ve zayıf yönler</h2>
+<div class="grid" id="swGrid" style="margin-top:14px"></div>
+</section>
+
+<!-- ================= PREFERENCES ================= -->
+<section id="pref">
+<h2>Tercihler · Hangi iş hangi modele?</h2>
+<p class="note" style="margin-bottom:12px">Bu üç testten çıkan ilk eşleştirme. Yeni testlerle güncellenecek.</p>
+<div class="wrap"><table class="pref">
+<thead><tr><th>İş kategorisi</th><th>Birinci tercih</th><th>Alternatif</th><th>Neden</th></tr></thead>
+<tbody id="prefBody"></tbody>
+</table></div>
+</section>
+</main>
+
+<!-- ================= DRAW.IO SOURCES ================= -->
+<script type="text/plain" id="x-claude"><mxfile host="app.diagrams.net">
+  <diagram name="Bireysel Kredi Tahsis">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" page="1" pageWidth="900" pageHeight="1600">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="s" value="Başvuru (Şube / Mobil / İnternet)" style="ellipse;whiteSpace=wrap;fillColor=#d5e8d4;" vertex="1" parent="1"><mxGeometry x="330" y="20" width="220" height="60" as="geometry"/></mxCell>
+        <mxCell id="a1" value="Kimlik doğrulama&#xa;(NVİ / e-Devlet, KYC)" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="110" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="a2" value="Gelir beyanı ve belge toplama&#xa;(SGK hizmet dökümü, maaş bordrosu)" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="200" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="a3" value="Sorgular: KKB / Findeks skoru,&#xa;risk raporu, kara liste, MASAK" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="290" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="d1" value="Ön eleme&#xa;geçti mi?" style="rhombus;whiteSpace=wrap;fillColor=#fff2cc;" vertex="1" parent="1"><mxGeometry x="380" y="380" width="120" height="80" as="geometry"/></mxCell>
+        <mxCell id="a4" value="Skorlama ve limit hesabı&#xa;(BDDK borç/gelir ve vade sınırları)" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="490" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="d2" value="Otomatik karar&#xa;sonucu?" style="rhombus;whiteSpace=wrap;fillColor=#fff2cc;" vertex="1" parent="1"><mxGeometry x="380" y="580" width="120" height="80" as="geometry"/></mxCell>
+        <mxCell id="a5" value="Manuel değerlendirme&#xa;(Tahsis / Kredi Komitesi yetki seviyesi)" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="620" y="590" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="d3" value="Onay?" style="rhombus;whiteSpace=wrap;fillColor=#fff2cc;" vertex="1" parent="1"><mxGeometry x="660" y="690" width="120" height="80" as="geometry"/></mxCell>
+        <mxCell id="a6" value="Teklif: tutar, faiz, vade,&#xa;ödeme planı, masraflar" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="700" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="a7" value="Sözleşme öncesi bilgi formu,&#xa;sözleşme imzası (ıslak / dijital)" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="790" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="a8" value="Teminat / sigorta / kefil&#xa;(gerekiyorsa)" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="880" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="a9" value="Kullandırım ve KKB bildirimi" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="340" y="970" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="e" value="Kredi izleme ve tahsilat" style="ellipse;whiteSpace=wrap;fillColor=#d5e8d4;" vertex="1" parent="1"><mxGeometry x="340" y="1060" width="200" height="60" as="geometry"/></mxCell>
+        <mxCell id="r" value="Ret: gerekçenin müşteriye&#xa;bildirilmesi" style="ellipse;whiteSpace=wrap;fillColor=#f8cecc;" vertex="1" parent="1"><mxGeometry x="60" y="580" width="200" height="70" as="geometry"/></mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="s" target="a1" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="a1" target="a2" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="a2" target="a3" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="a3" target="d1" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="Evet" edge="1" parent="1" source="d1" target="a4" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" value="Hayır" edge="1" parent="1" source="d1" target="r" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="a4" target="d2" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="Onay" edge="1" parent="1" source="d2" target="a6" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" value="Gri bölge" edge="1" parent="1" source="d2" target="a5" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" value="Ret" edge="1" parent="1" source="d2" target="r" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="a5" target="d3" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" value="Evet" edge="1" parent="1" source="d3" target="a6" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" value="Hayır" edge="1" parent="1" source="d3" target="r" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="a6" target="a7" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="a7" target="a8" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="a8" target="a9" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="a9" target="e" style="endArrow=block;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile></script>
+
+<script type="text/plain" id="x-chatgpt"><mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="kredi-tahsis" name="Bireysel Kredi Tahsis">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="start" value="Başlangıç" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="390" y="20" width="140" height="50" as="geometry"/></mxCell>
+        <mxCell id="apply" value="Kredi başvurusu alınır&#xa;(Şube / Mobil / İnternet)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="340" y="100" width="240" height="60" as="geometry"/></mxCell>
+        <mxCell id="identity" value="Kimlik ve müşteri doğrulama&#xa;(KYC ve gerekli kontroller)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="340" y="190" width="240" height="60" as="geometry"/></mxCell>
+        <mxCell id="idcheck" value="Kimlik doğrulandı mı?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="380" y="280" width="160" height="90" as="geometry"/></mxCell>
+        <mxCell id="rejectid" value="Başvuru durdurulur /&#xa;eksik bilgi tamamlanır" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="650" y="295" width="210" height="60" as="geometry"/></mxCell>
+        <mxCell id="docs" value="Gelir, istihdam ve diğer&#xa;gerekli belgeler kontrol edilir" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="340" y="410" width="240" height="60" as="geometry"/></mxCell>
+        <mxCell id="risk" value="Kredi değerlendirmesi&#xa;(Risk, kredi geçmişi, gelir,&#xa;borçluluk ve ödeme kapasitesi)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="330" y="510" width="260" height="80" as="geometry"/></mxCell>
+        <mxCell id="decision" value="Kredi politikası ve&#xa;tahsis kriterleri karşılanıyor mu?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="370" y="630" width="180" height="100" as="geometry"/></mxCell>
+        <mxCell id="manual" value="Gerekirse manuel inceleme /&#xa;yetkili onayı" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="40" y="650" width="220" height="60" as="geometry"/></mxCell>
+        <mxCell id="manualdecision" value="Onaylandı mı?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="60" y="760" width="180" height="90" as="geometry"/></mxCell>
+        <mxCell id="reject" value="Ret kararı&#xa;Başvuru sahibine bildirim" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="680" y="770" width="220" height="60" as="geometry"/></mxCell>
+        <mxCell id="offer" value="Kredi tutarı, vade, faiz ve&#xa;koşulların oluşturulması" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="330" y="900" width="260" height="60" as="geometry"/></mxCell>
+        <mxCell id="customer" value="Müşteri koşulları kabul ediyor mu?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="370" y="1000" width="180" height="90" as="geometry"/></mxCell>
+        <mxCell id="cancel" value="Başvuru sonlandırılır" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="680" y="1015" width="220" height="55" as="geometry"/></mxCell>
+        <mxCell id="contract" value="Sözleşme ve gerekli yasal&#xa;onaylar tamamlanır" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="330" y="1130" width="260" height="60" as="geometry"/></mxCell>
+        <mxCell id="finalcheck" value="Son kontroller ve&#xa;kullandırım koşullarının teyidi" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="330" y="1230" width="260" height="60" as="geometry"/></mxCell>
+        <mxCell id="disburse" value="Kredi kullandırımı&#xa;(Tutar müşteri hesabına aktarılır)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="330" y="1330" width="260" height="60" as="geometry"/></mxCell>
+        <mxCell id="end" value="Süreç tamamlandı" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="390" y="1430" width="140" height="50" as="geometry"/></mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" target="apply"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="apply" target="identity"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="identity" target="idcheck"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="Evet" edge="1" parent="1" source="idcheck" target="docs"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="Hayır" edge="1" parent="1" source="idcheck" target="rejectid"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="docs" target="risk"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="risk" target="decision"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="Evet" edge="1" parent="1" source="decision" target="offer"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" value="İnceleme gerekli" edge="1" parent="1" source="decision" target="manual"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" value="Hayır / uygun değil" edge="1" parent="1" source="decision" target="reject"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="manual" target="manualdecision"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" value="Evet" edge="1" parent="1" source="manualdecision" target="offer"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" value="Hayır" edge="1" parent="1" source="manualdecision" target="reject"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="offer" target="customer"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e15" value="Evet" edge="1" parent="1" source="customer" target="contract"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e16" value="Hayır" edge="1" parent="1" source="customer" target="cancel"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="contract" target="finalcheck"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e18" edge="1" parent="1" source="finalcheck" target="disburse"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e19" edge="1" parent="1" source="disburse" target="end"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile></script>
+
+<script type="text/plain" id="x-gemini"><mxfile host="app.diagrams.net" modified="2026-03-30T00:00:00.000Z" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="credit_approval_flow" name="Bireysel Kredi Tahsis Süreci">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Başlangıç -->
+        <mxCell id="start" value="Müşteri Kredi Başvurusu&#10;(Mobil/Şube/Web)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="40" width="180" height="60" as="geometry" />
+        </mxCell>
+        <!-- KKB ve Skorlama -->
+        <mxCell id="kkb" value="KKB &amp; İç Skorlama&#10;Sorgulaması" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="320" y="140" width="160" height="60" as="geometry" />
+        </mxCell>
+        <!-- Otomatik Karar -->
+        <mxCell id="dec1" value="Otomatik Kredi&#10;Kararı (Kural Motoru)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="315" y="240" width="170" height="100" as="geometry" />
+        </mxCell>
+        <!-- Manuel Tahsis İnceleme -->
+        <mxCell id="manual" value="Tahsis Uzmanı İncelemesi&#10;(Gelir Belgesi &amp; İstihbarat)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="540" y="260" width="170" height="60" as="geometry" />
+        </mxCell>
+        <!-- Manuel Karar -->
+        <mxCell id="dec2" value="Tahsis Kararı?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="380" width="130" height="80" as="geometry" />
+        </mxCell>
+        <!-- Sözleşme Ön Olayı -->
+        <mxCell id="contract" value="Kredi Sözleşmesi ve&#10;Ödeme Planı Hazırlama" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="320" y="390" width="160" height="60" as="geometry" />
+        </mxCell>
+        <!-- Kullarım -->
+        <mxCell id="disbursement" value="Kredinin Müşteri Hesaplarına&#10;Aktarılması (Kullarım)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="500" width="180" height="60" as="geometry" />
+        </mxCell>
+        <!-- Red -->
+        <mxCell id="reject" value="Kredi Reddi ve&#10;Müşteri Bilgilendirme" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="260" width="160" height="60" as="geometry" />
+        </mxCell>
+        <!-- Bitiş -->
+        <mxCell id="end" value="Süreç Sonu" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="350" y="600" width="100" height="50" as="geometry" />
+        </mxCell>
+        <!-- Bağlantılar -->
+        <mxCell id="e1" edge="1" parent="1" source="start" target="kkb"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="kkb" target="dec1"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" value="Onay" edge="1" parent="1" source="dec1" target="contract"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="Red" edge="1" parent="1" source="dec1" target="reject"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="Manuel İnceleme" edge="1" parent="1" source="dec1" target="manual"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="manual" target="dec2"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" value="Onay" edge="1" parent="1" source="dec2" target="contract"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" value="Red" edge="1" parent="1" source="dec2" target="reject"><geometry relative="1" as="geometry" /><Array as="points"><mxPoint x="180" y="420" /></Array></mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="contract" target="disbursement"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="disbursement" target="end"><geometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="reject" target="end"><geometry relative="1" as="geometry" /><Array as="points"><mxPoint x="180" y="625" /></Array></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile></script>
+
+<script type="text/plain" id="x-deepseek"><?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-01-01T00:00:00.000Z" agent="drawio-chart" version="24.0.0">
+  <diagram name="Bireysel Kredi Tahsis Süreci" id="kredi-tahsis">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0" background="#F8FAFC">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Title -->
+        <mxCell id="title" value="Türkiye'de Bireysel Kredi Tahsis Süreci" style="text;html=0;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontFamily=system-ui;fontSize=20;fontStyle=1;fontColor=#2D3748;" vertex="1" parent="1">
+          <mxGeometry x="213" y="20" width="400" height="40" as="geometry"/>
+        </mxCell>
+        <!-- Start -->
+        <mxCell id="start" value="Başvuru (Dijital / Şube)" style="rounded=1;whiteSpace=wrap;fillColor=#005D7B;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="80" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Identity & Customer Check -->
+        <mxCell id="kimlik" value="Kimlik ve Müşteri Doğrulama" style="rounded=1;whiteSpace=wrap;fillColor=#E99151;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="180" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Findeks / Credit Bureau Check -->
+        <mxCell id="findeks" value="Findeks Kredi Notu ve Risk Raporu Sorgusu" style="rounded=1;whiteSpace=wrap;fillColor=#E99151;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="280" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Decision: Pre-assessment -->
+        <mxCell id="on_degerlendirme" value="Ön Değerlendirme Olumlu mu?" style="rhombus;whiteSpace=wrap;fillColor=#7C3AED;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="380" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Rejection -->
+        <mxCell id="red" value="Başvuru Reddi / Ek Belge Talebi" style="rounded=1;whiteSpace=wrap;fillColor=#DC2626;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="390" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Document Verification / Income Check -->
+        <mxCell id="gelir" value="Gelir ve Belge Doğrulama (SGK, maaş, ekstre)" style="rounded=1;whiteSpace=wrap;fillColor=#E99151;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="510" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Decision: Final Approval -->
+        <mxCell id="nihai_onay" value="Nihai Onay?" style="rhombus;whiteSpace=wrap;fillColor=#7C3AED;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="610" width="180" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Contract & Disbursement -->
+        <mxCell id="sozlesme" value="Kredi Sözleşmesi ve Para Transferi" style="rounded=1;whiteSpace=wrap;fillColor=#059669;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="730" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <!-- End -->
+        <mxCell id="end" value="Kredi Kullandırımı Tamamlandı" style="rounded=1;whiteSpace=wrap;fillColor=#005D7B;strokeColor=none;fontColor=#FFFFFF;fontFamily=system-ui;fontSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="830" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="start" target="kimlik"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="kimlik" target="findeks"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="findeks" target="on_degerlendirme"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="on_degerlendirme" target="red"><mxGeometry relative="1" as="geometry"><mxPoint x="450" y="420" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="e4_label" value="Hayır" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="e4"><mxGeometry x="-0.2" relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="on_degerlendirme" target="gelir"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5_label" value="Evet" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="e5"><mxGeometry x="-0.2" relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="gelir" target="nihai_onay"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="nihai_onay" target="red"><mxGeometry relative="1" as="geometry"><mxPoint x="500" y="650" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="e7_label" value="Hayır" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="e7"><mxGeometry x="-0.2" relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="nihai_onay" target="sozlesme"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8_label" value="Evet" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" vertex="1" connectable="0" parent="e8"><mxGeometry x="-0.2" relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;" edge="1" parent="1" source="sozlesme" target="end"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile></script>
+
+<script type="text/plain" id="x-perplexity"><mxfile host="app.diagrams.net">
+  <diagram name="Bireysel Kredi Tahsis Sureci">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" value="Başla: Müşteri Kredi Talebi" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1"><mxGeometry x="380" y="20" width="220" height="50" as="geometry" /></mxCell>
+        <mxCell id="application" value="Kredi Başvurusu Al\nŞube / İnternet / Mobil" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1"><mxGeometry x="380" y="110" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="kyc" value="Müşteri Kimlik ve İletişim Doğrulama\n(KYC / KVKK Onayı)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1"><mxGeometry x="380" y="210" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="consent" value="Müşteri Rızası ve\nVeri Paylaşım Onayı Var mı?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;" vertex="1" parent="1"><mxGeometry x="380" y="310" width="220" height="80" as="geometry" /></mxCell>
+        <mxCell id="reject_consent" value="Başvuruyu Sonlandır\nMüşteriyi Bilgilendir" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1"><mxGeometry x="700" y="325" width="200" height="50" as="geometry" /></mxCell>
+        <mxCell id="docs" value="Gelir, Kimlik, Adres ve\nGerekli Belgeleri Topla" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1"><mxGeometry x="380" y="430" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="score" value="Kredi Skorlama ve Risk Değerlendirmesi\n(KKB / Findeks, gelir, borç, kredi notu)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1"><mxGeometry x="380" y="530" width="220" height="70" as="geometry" /></mxCell>
+        <mxCell id="decision" value="Otomatik / Manuel\nKredi Kararı" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;" vertex="1" parent="1"><mxGeometry x="380" y="640" width="220" height="90" as="geometry" /></mxCell>
+        <mxCell id="reject" value="Red / Eksik Belgeleri Bildir\nİtiraz Sürecini Aç" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1"><mxGeometry x="700" y="660" width="200" height="50" as="geometry" /></mxCell>
+        <mxCell id="approve" value="Kredi Tutarı, Vade,\nFaiz ve Masraf Belirle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1"><mxGeometry x="60" y="655" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="contract" value="Sözleşme, Bilgilendirme Formu\nve Onay Süreci" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1"><mxGeometry x="60" y="755" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="disbursement" value="Kredi Tahsisi ve\nHesaba Aktarım" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1"><mxGeometry x="60" y="855" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="monitoring" value="Ödeme Takibi, Risk İzleme\nve Tahsilat Süreçleri" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1"><mxGeometry x="60" y="955" width="220" height="60" as="geometry" /></mxCell>
+        <mxCell id="end" value="Son" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1"><mxGeometry x="130" y="1055" width="80" height="40" as="geometry" /></mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="start" target="application"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="application" target="kyc"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="kyc" target="consent"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="Evet" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="consent" target="docs"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="Hayır" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="consent" target="reject_consent"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="docs" target="score"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="score" target="decision"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" value="Olumlu" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="decision" target="approve"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" value="Olumsuz / Eksik" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="decision" target="reject"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="approve" target="contract"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="contract" target="disbursement"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="disbursement" target="monitoring"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="monitoring" target="end"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile></script>
+
+<script>
+const MODELS=["Claude","ChatGPT","Gemini","DeepSeek","Perplexity"];
+const COLORS={Claude:"var(--claude)",ChatGPT:"var(--chatgpt)",Gemini:"var(--gemini)",DeepSeek:"var(--deepseek)",Perplexity:"var(--perplexity)"};
+
+/* ---- tabs ---- */
+document.querySelectorAll(".tabs").forEach(t=>{
+  const g=t.dataset.group;
+  MODELS.forEach((m,i)=>{
+    const b=document.createElement("button");b.textContent=m;
+    b.onclick=()=>{
+      t.querySelectorAll("button").forEach(x=>{x.classList.remove("on");x.style.background=""});
+      b.classList.add("on");b.style.background=COLORS[m];
+      document.querySelectorAll(`.panel[data-group="${g}"]`).forEach(p=>p.classList.toggle("on",p.dataset.model===m));
+    };
+    t.appendChild(b); if(i===0)b.click();
+  });
+});
+
+/* ---- draw.io XML -> SVG renderer ---- */
+function styleObj(s){const o={};(s||"").split(";").forEach(p=>{if(!p)return;const[k,v]=p.split("=");o[k]=v===undefined?true:v});return o}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function wrapLines(text,width,fs){
+  const max=Math.max(6,Math.floor((width-12)/(fs*0.55)));const out=[];
+  text.split("\n").forEach(line=>{let cur="";line.split(" ").forEach(w=>{if((cur+" "+w).trim().length>max&&cur){out.push(cur);cur=w}else cur=(cur+" "+w).trim()});out.push(cur)});
+  return out;
+}
+function clip(c,box,toward){ // point on box border from center c toward point
+  const dx=toward.x-c.x,dy=toward.y-c.y;if(!dx&&!dy)return c;
+  const sx=dx?(box.w/2)/Math.abs(dx):Infinity,sy=dy?(box.h/2)/Math.abs(dy):Infinity;const s=Math.min(sx,sy);
+  return{x:c.x+dx*s,y:c.y+dy*s};
+}
+function render(xmlText){
+  const doc=new DOMParser().parseFromString(xmlText.trim(),"text/xml");
+  const cells=[...doc.getElementsByTagName("mxCell")];
+  const V={},E=[],labels={};
+  cells.forEach(c=>{
+    const st=styleObj(c.getAttribute("style"));
+    const g=c.getElementsByTagName("mxGeometry")[0]||c.getElementsByTagName("geometry")[0];
+    const val=(c.getAttribute("value")||"").replace(/\\n/g,"\n");
+    if(c.getAttribute("edge")==="1")E.push({id:c.id,s:c.getAttribute("source"),t:c.getAttribute("target"),v:val});
+    else if(c.getAttribute("vertex")==="1"){
+      if(st.edgeLabel){labels[c.getAttribute("parent")]=val;return}
+      if(!g||g.getAttribute("relative")==="1")return;
+      V[c.id]={x:+g.getAttribute("x")||0,y:+g.getAttribute("y")||0,w:+g.getAttribute("width"),h:+g.getAttribute("height"),v:val,st};
+    }
+  });
+  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+  Object.values(V).forEach(b=>{minX=Math.min(minX,b.x);minY=Math.min(minY,b.y);maxX=Math.max(maxX,b.x+b.w);maxY=Math.max(maxY,b.y+b.h)});
+  const pad=30;let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${minX-pad} ${minY-pad} ${maxX-minX+2*pad} ${maxY-minY+2*pad}" width="${maxX-minX+2*pad}" font-family="system-ui,sans-serif">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs>`;
+  let shapes="",edges="",elabels="";
+  Object.values(V).forEach(b=>{
+    const fill=b.st.fillColor||"#fff",stroke=b.st.strokeColor==="none"?"none":(b.st.strokeColor||"#333");
+    const fc=b.st.fontColor||"#1d2330",fs=+(b.st.fontSize||12),bold=b.st.fontStyle==="1"?"700":"400";
+    if(b.st.ellipse)shapes+=`<ellipse cx="${b.x+b.w/2}" cy="${b.y+b.h/2}" rx="${b.w/2}" ry="${b.h/2}" fill="${fill}" stroke="${stroke}"/>`;
+    else if(b.st.rhombus)shapes+=`<polygon points="${b.x+b.w/2},${b.y} ${b.x+b.w},${b.y+b.h/2} ${b.x+b.w/2},${b.y+b.h} ${b.x},${b.y+b.h/2}" fill="${fill}" stroke="${stroke}"/>`;
+    else if(!b.st.text)shapes+=`<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="${b.st.rounded?8:0}" fill="${fill}" stroke="${stroke}"/>`;
+    const lines=wrapLines(b.v,b.st.rhombus?b.w*0.75:b.w,fs);const lh=fs*1.25;let y0=b.y+b.h/2-(lines.length-1)*lh/2;
+    shapes+=`<text text-anchor="middle" dominant-baseline="middle" font-size="${fs}" font-weight="${bold}" fill="${fc}">`+lines.map((l,i)=>`<tspan x="${b.x+b.w/2}" y="${y0+i*lh}">${esc(l)}</tspan>`).join("")+`</text>`;
+  });
+  E.forEach(e=>{
+    const a=V[e.s],b=V[e.t];if(!a||!b)return;
+    const ca={x:a.x+a.w/2,y:a.y+a.h/2},cb={x:b.x+b.w/2,y:b.y+b.h/2};
+    const p1=clip(ca,a,cb),p2=clip(cb,b,ca);
+    edges+=`<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="#444" stroke-width="1.4" marker-end="url(#ar)"/>`;
+    const lab=e.v||labels[e.id];
+    if(lab){const mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2,w=lab.length*6.4+10;
+      elabels+=`<rect x="${mx-w/2}" y="${my-9}" width="${w}" height="18" rx="4" fill="#fff" stroke="#bbb"/><text x="${mx}" y="${my+4}" text-anchor="middle" font-size="11" fill="#333">${esc(lab)}</text>`;}
+  });
+  return svg+edges+shapes+elabels+"</svg>";
+}
+document.querySelectorAll(".diagram").forEach(d=>{
+  try{d.innerHTML=render(document.getElementById(d.dataset.xml).textContent)}catch(err){d.textContent="Diyagram çizilemedi: "+err.message}
+});
+document.querySelectorAll(".xmlsrc").forEach(p=>p.textContent=document.getElementById(p.dataset.xml).textContent.trim());
+
+/* ---- scores ---- */
+const SCORES={Claude:[5,5,5],ChatGPT:[4,4,2],Gemini:[2,2,3],DeepSeek:[3,3,4],Perplexity:[4,3,4]};
+document.getElementById("scoreBody").innerHTML=MODELS.map(m=>{
+  const s=SCORES[m],avg=(s.reduce((a,b)=>a+b)/3).toFixed(1);
+  return `<tr><td><span class="pill" style="background:${COLORS[m]}">${m}</span></td>`+s.map(x=>`<td class="score s${x}">${x}</td>`).join("")+`<td class="score">${avg}</td></tr>`;
+}).join("");
+
+/* ---- strengths / weaknesses ---- */
+const SW={
+Claude:{g:["Talimata en sadık: 1 sayfa sınırı, yönetici özeti, net yapı","Somut ve doğru adlandırılmış çalışmalar (Bloom RCT'leri, Microsoft/Nature Human Behaviour)","Türkiye bankacılığına özgü alan bilgisi: KKB/Findeks, MASAK, BDDK limitleri, NVİ, KKB bildirimi","Kod kısa, çalışır ve iş mantığı doğru: tamamlanan = kapanmış talep, veri kalitesi kontrolü, Excel'e aktarım"],
+b:["Araştırmada tıklanabilir kaynakça/DOI yok","Diyagramda kenar yerleşimi sade; ret ucuna gelen oklar çakışabiliyor","Python'da grafik/görselleştirme yok"]},
+ChatGPT:{g:["Kaynakça + DOI linkleri, güncel 2026 meta-analizi","En eksiksiz kredi karar mantığı: kimlik kontrolü, manuel onay, müşteri kabulü, son kontrol","Kod açıklamaları öğretici; ilk yanıt süresi vs. kapanış süresi ayrımını fark ediyor","En ileri teknik yaklaşım: TF-IDF + K-Means ile otomatik kategori"],
+b:["Python çıktısı kopuk: tanımsız değişkenler (analiz, kategori_anahtar_kelimeleri), yarıda kesilen kod – olduğu gibi çalışmaz","Araştırmada yalnızca iki kaynak, bulgular genel","Kredi şemasında Türkiye'ye özgü kurum/mevzuat yok"]},
+Gemini:{g:["Kurumsal sunuma uygun, okunaklı başlık yapısı","Diyagram kompakt ve renk kodlu","Python kodu basit ve okunaklı bölümlenmiş"],
+b:["Araştırmada hiç kaynak yok; “%13–22 artış” gibi rakamlar desteksiz ve genelleştirilmiş","draw.io kodunda kenarlar <geometry> etiketiyle yazılmış (draw.io <mxGeometry> bekler) → oklar düzgün yüklenmeyebilir","Yazım hatası (“Kullarım”), en az adım içeren şemalardan biri","Kodda kapanmamış talepler de tamamlanmış sayılıyor; kategori sırası yüzünden kredi kartı şikayetleri yanlış kategoriye düşüyor"]},
+DeepSeek:{g:["Ölçüm yöntemi farkını (öz beyan vs. nesnel) iyi vurguluyor","Diyagram görsel olarak en şık, akış açıklaması eklenmiş","Örnek veri üreterek kodu dosya olmadan test edilebilir kılıyor; ek analizler (kategori süresi, trend)"],
+b:["1 sayfa sınırına uymuyor, yönetici özeti tek başına yarım sayfa","Atıf işaretleri boş kalmış; düşük genellenebilirlikli küçük örneklemler (Nijerya, Hindistan)","Kredi şeması en sade: teklif, teminat, manuel onay, KKB bildirimi yok","Kodda negatif süreler sessizce 0'a çekiliyor, anahtar kelimeler kategoriler arası çakışıyor"]},
+Perplexity:{g:["Her bulguya kaynak bağlantısı; makro (BLS, IMF) ve meta-analiz verisini birleştiriyor","KVKK rıza adımı, itiraz süreci ve izleme/tahsilat gibi uyum adımları","Kod çalışır; Excel'e aktarım ve grafik dahil; Türkçe karaktersiz yazımları da yakalıyor"],
+b:["Atıf artıkları metne karışmış (“bls+3”, “link.springer+1”) – temizlemeden kullanılamaz","draw.io etiketlerinde “\\n” düz metin olarak görünür; otomatik ve manuel karar tek kutuda","Kategori sırası yüzünden kredi kartı şikayetleri “Kredi ve Finansman”a düşüyor; süre yalnızca gün cinsinden"]}
+};
+document.getElementById("swGrid").innerHTML=MODELS.map(m=>`<div class="mcard" style="border-top-color:${COLORS[m]}"><h3>${m}</h3>
+<div class="lbl g">Güçlü yönler</div><ul>${SW[m].g.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+<div class="lbl b">Zayıf yönler</div><ul>${SW[m].b.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("");
+
+/* ---- preferences ---- */
+const PREF=[
+["Yönetici özeti / 1 sayfalık karar notu","Claude","ChatGPT","Format ve uzunluk talimatına en sadık, net öneriler"],
+["Kaynaklı literatür taraması, güncel veri","Perplexity","ChatGPT","Her iddiaya link; çıktı temizlenip Claude ile düzenlenebilir"],
+["Akademik kaynakça gereken rapor","ChatGPT","Perplexity","DOI'li, düzgün biçimli kaynakça"],
+["Süreç akış şeması / draw.io","Claude","ChatGPT","Alan bilgisi + hatasız XML; ChatGPT karar dallarında güçlü"],
+["Bankacılık / mevzuat bağlamı (Türkiye)","Claude","Perplexity","KKB, BDDK, MASAK, KVKK gibi yerel adımları kendiliğinden ekliyor"],
+["Doğrudan çalışan veri analizi kodu","Claude","Perplexity","Çalışır, kısa, iş mantığı doğru"],
+["Kodu dosya olmadan denemek / prototip","DeepSeek","Claude","Örnek veri üretiyor, ek analizler sunuyor"],
+["İleri ML yaklaşımı fikri (kümeleme vb.)","ChatGPT","Claude","Yaklaşım iyi ama kodu mutlaka kontrol edilmeli"],
+["Görsel olarak şık diyagram stili","DeepSeek","Gemini","Renk ve tipografi tercihleri güçlü; içerik başka modelle zenginleştirilmeli"],
+["Hızlı taslak / beyin fırtınası","Gemini","ChatGPT","Kurumsal, okunaklı yapı; doğruluk gerektiren işlerde tek başına kullanılmamalı"]
+];
+const pill=m=>`<span class="pill" style="background:${COLORS[m]}">${m}</span>`;
+document.getElementById("prefBody").innerHTML=PREF.map(r=>`<tr><td>${r[0]}</td><td>${pill(r[1])}</td><td>${pill(r[2])}</td><td>${r[3]}</td></tr>`).join("");
+</script>
+</body>
+</html>
